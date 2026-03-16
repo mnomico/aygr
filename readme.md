@@ -4,4 +4,8 @@
 
 ## Teoría
 
-- [Introducción a la Gestión de Redes](./teoria/01_intro_gestion/apunte.md)
+- [Introducción a la Gestión de Redes](/teoria/01_intro_gestion/apunte.md)
+
+## Práctica
+
+- [TP 1. Herramientas de Diagnóstico de Redes](/practica/tp1/tp1.md)
