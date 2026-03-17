@@ -300,12 +300,10 @@ Herramienta para el monitoreo y análisis de tráfico en la red. Provee una inte
 
 Para mi distribución tuve que utilizar **ntopng**, una vez instalado tuve que iniciar los servicios **valkey** y **ntop** con los siguientes comandos:
 
-    ```
     sudo systemctl enable valkey
     sudo systemctl start valkey
     sudo systemctl enable ntopng@enp3s0
     sudo systemctl start ntopng@enp3s0
-    ```
 
 2. Luego ingrese vía web browser a http://localhost:3000. Debería estar visualizando la interfaz de ntop.
 3. Revise las pestañas "Flows", "Hosts". Comente muy brevemente las opciones que le resulten mas útiles o interesantes. Si visualiza poca información, navegue por un par de sitios externos y vuelva a recargar la pagina de Ntop (F5).
@@ -326,7 +324,11 @@ Para poder capturar el tráfico de red a nivel de paquetes se necesita tener acc
 
         En las conexiones TCP, todas utilizan el procolo TLS, mientras que en las conexiones UDP la mayoría utiliza el protocolo QUIC.
 
+        <div align="center">
+
         ![](./imagenes/aplicaciones.png)
+
+        </div>
 
         Esta gráfica se obtuvo de la sección Interface -> Details -> Applications
 
@@ -344,13 +346,21 @@ Para poder capturar el tráfico de red a nivel de paquetes se necesita tener acc
 
         Para poder revisar la actividad de la red por período de tiempo, el listado más adecuado sería el que se encuentra en Interface -> Details -> Historical Data. En esa sección se presenta una gráfica que muestra la actividad de la red, y puede seleccionarse si se quiere ver la actividad de los últimos 10/30 minutos, de las últimas 1/2/6/12 horas, o de los últimos días/semanas/meses/año.
 
+        <div align="center">
+
         ![](./imagenes/actividad_red.png)
+
+        </div>
 
     6. ¿Cómo se pueden establecer alertas mediante Ntop?
 
         En la sección Alerts -> Notifications, se pueden establecer alertas.
 
+        <div align="center">
+
         ![](./imagenes/alertas.jpg)
+
+        </div>
 
         Con el botón + se pueden agregar nuevos endpoints, como email, Slack, etc.
 
@@ -358,7 +368,11 @@ Para poder capturar el tráfico de red a nivel de paquetes se necesita tener acc
 
         En la sección Interface -> Details -> Applications se puede ver un resumen del tráfico de los protocolos de la Capa de Aplicación en TCP/IP. Muestra el total de paquetes intercambiados, la cantidad total de bytes intercambiados, la cantidad de bytes enviados y recibidos, y el porcentaje relativo de datos intercambiados. También muestra una característica denominada Breed, una clasificación establecida por ntopng que determina cada aplicación por su naturaleza.
 
+        <div align="center">
+
         ![](./imagenes/resumen_aplicacion.png)
+
+        </div>
 
 ### Herramientas gráficas
 
