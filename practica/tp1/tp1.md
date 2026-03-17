@@ -81,6 +81,16 @@ Tanto en este práctico como en los sucesivos, es sumamente conveniente que real
     urlformat = https://%host%/cat
     ```
 
+<div align="center">
+
+![](./imagenes/Infobae_last_10800.png)
+
+![](./imagenes/Notion_last_10800.png)
+
+![](./imagenes/CatAPI_last_10800.png)
+
+</div>
+
 5. Conceptualmente, ¿qué diferencias principales hay entre medir latencia contra un destino mediante ICMP y medir latencia mediante protocolo HTTP/S?
 
     Medir la latencia mediante ICMP significa medir a nivel de la capa de red, se envía un Echo Request y se espera el Echo Reply, midiendo el RTT (Round Trip Time), es decir el tiempo de ida y vuelta. 
@@ -165,40 +175,190 @@ Tanto en este práctico como en los sucesivos, es sumamente conveniente que real
 
 1. Lea el manual de la herramienta y ejecute el ejercicio 1 de la experiencia de laboratorio contra **localhost**. Comente que información adicional visualiza respecto al ejercicio anterior. Compárelo con la ejecución del ejemplo 1 al dominio de la UNLu, y comente brevemente por qué una mala configuración puede representar un riesgo de seguridad.
 2. Una de las ventajas de nmap es que permite, mediante comodines o con formato CIDR, hacer un escaneo completo de un segmento de red para descubrir dispositivos presentes en la misma. Busque en el manual la sección “TARGET SPECIFICATION” (o bien en español: ESPECIFICACIÓN DE OBJETIVOS) y deduzca como puede encontrar todos los dispositivos conectados a su red. Puede ver su dirección IP actual mediante el comando **ip addr show**.
+
+    ```
+    ❯ nmap -sn 192.168.100.21/24
+    Starting Nmap 7.98 ( https://nmap.org ) at 2026-03-16 14:11 -0300
+    Nmap scan report for 192.168.100.1
+    Host is up (0.00037s latency).
+    Nmap scan report for 192.168.100.3
+    Host is up (0.084s latency).
+    Nmap scan report for 192.168.100.5
+    Host is up (0.048s latency).
+    Nmap scan report for 192.168.100.7
+    Host is up (0.0022s latency).
+    Nmap scan report for 192.168.100.8
+    Host is up (0.0026s latency).
+    Nmap scan report for cachyos3.local (192.168.100.21)
+    Host is up (0.00070s latency).
+    Nmap done: 256 IP addresses (6 hosts up) scanned in 10.93 seconds
+    ```
+
+    A partir de la dirección IP que obtengo mediante el comando **ip addr show**, la cual es 192.168.100.21/24, utilizo el comando **nmap -sn 192.168.100.21/24**. El argumento -sn indica a nmap que no escanee puertos, haciendo que el escaneo sea más rápido.
+
 3. Investigue que opción permite hacer escaneo de puertos UDP y luego utilícela contra un host particular. ¿Por qué podría resultar útil realizar un análisis de ésta característica, si la mayoría de los servicios de red utilizan TCP?
+
+    La opción que permite realizar un escaneo de puertos UDP es -sU. Se utiliza de la siguiente manera:
+
+    ```nmap -sU 192.168.100.1```
+
+    Esta característica es útil para escanear aquellos servicios UDP que podrían estar expuestos, ya que si bien la mayoría de los servicios utilizan TCP, hay otros servicios importantes como DNS, SNMP o DHCP que utilizan el protocolo UDP.
+
+    ```
+    ❯ sudo nmap -sU 192.168.100.1
+    Starting Nmap 7.98 ( https://nmap.org ) at 2026-03-16 14:34 -0300
+    Nmap scan report for 192.168.100.1
+    Host is up (0.00044s latency).
+    Not shown: 957 closed udp ports (port-unreach), 42 open|filtered udp ports (no-response)
+    PORT   STATE SERVICE
+    53/udp open  domain
+    MAC Address: 70:8C:B6:A8:36:75 (Huawei Technologies)
+
+    Nmap done: 1 IP address (1 host up) scanned in 1037.90 seconds
+    ```
+
+
 4. Instale en un equipo de su hogar la aplicación **nmap** y realice un escaneo a toda la red de su hogar. ¿Que ha logrado descubrir? ¿Existen otros host aparte de su equipo? ¿Qué puertos poseen en escucha? ¿se corresponden con los servicios que usted esperaba?
+
+    ```
+    ❯ nmap 192.168.100.21/24
+    Starting Nmap 7.98 ( https://nmap.org ) at 2026-03-16 14:25 -0300
+    Nmap scan report for 192.168.100.1
+    Host is up (0.0062s latency).
+    Not shown: 995 closed tcp ports (conn-refused)
+    PORT   STATE    SERVICE
+    21/tcp filtered ftp
+    22/tcp filtered ssh
+    23/tcp filtered telnet
+    53/tcp open     domain
+    80/tcp open     http
+
+    Nmap scan report for 192.168.100.7
+    Host is up (0.0029s latency).
+    All 1000 scanned ports on 192.168.100.7 are in ignored states.
+    Not shown: 1000 closed tcp ports (conn-refused)
+
+    Nmap scan report for 192.168.100.8
+    Host is up (0.0027s latency).
+    All 1000 scanned ports on 192.168.100.8 are in ignored states.
+    Not shown: 1000 closed tcp ports (conn-refused)
+
+    Nmap scan report for cachyos3.local (192.168.100.21)
+    Host is up (0.000016s latency).
+    Not shown: 999 closed tcp ports (conn-refused)
+    PORT   STATE SERVICE
+    80/tcp open  http
+
+    Nmap done: 256 IP addresses (4 hosts up) scanned in 30.56 seconds
+    ```
+
+El host con dirección IP 192.168.100.1 tiene los 53 (DNS) y 80 (HTTP) abiertos, mientras que los puertos 21 (FTP), 22 (SSH), y 23 (Telnet) parecen filtrados, posiblemente por un firewall. Esto tiene sentido ya que esta dirección pertenece al router por el cuál accedo a Internet. Los dos hosts siguientes son dispositivos externos, cuyos puertos parecen cerrados, y el último host es mi computadora, con el puerto 80 abierto, lo cual tiene sentido ya que para el ejercicio de Smokeping tuve que usar el servidor Apache.
 
 ### iperf (throughput)
 
-1. En el caso de TCP: Realice mediciones empleando diversos tamaños de ventana. Considerando valores: 1kb, 2kb, 16kb, 128kb, 320kb, 10mb Confeccione una gráfica que represente el throughput respecto del tamaño de ventana efectivamente asignado por el programa.
+1. En el caso de TCP: Realice mediciones empleando diversos tamaños de ventana. Considerando valores: 1kb, 2kb, 16kb, 128kb, 320kb, 10mb. Confeccione una gráfica que represente el throughput respecto del tamaño de ventana efectivamente asignado por el programa.
+
+<div align="center">
+
+![](./imagenes/grafico_iperf.png)
+
+</div>
+
+Los valores de throughput para 1kb, 2kb y 16kb de ventana oscilan entre 13 y 26 Mbits/sec debido a que como la prueba se realizó en la misma computadora, el sistema operativo ignora estos tamaños de ventana y los ajusta automáticamente.
+
 2. ¿Qué permite establecer la opción **-M**? ¿Cómo afecta esto al throughput? Investigue la técnica “Path MTU discovery”.
+
+El argumento **-M** permite establecer el MSS (Maximum Segment Size), el tamaño máximo de datos que contiene un segmento TCP. 
+
+Mientras más pequeño sea el MSS, en mayor cantidad de segmentos se van a dividir los datos, generando un mayor overhead de headers TCP/IP y reduciendo el throughput ya que se debe procesar cada segmento. Si el MSS es muy grande, superando el MTU del enlace, los paquetes se fragmentan y también afectaría el throughput.
+
+**Path MTU Discovery** es una técnica que permite determinar cuál es el MTU (Maximum Transmission Unit) más grande en una ruta entre dos hosts. El emisor envía paquetes con el bit "don't fragment", y si algún router tiene un MTU menor, descarta el paquete y devuelve un mensaje ICMP "fragmentation needed" junto con el MTU más grande que soporta. El emisor, luego de recibir este mensaje, reduce su MSS y vuelve a intentarlo hasta encontrar el MTU adecuado. El MTU que se utiliza generalmente en Ethernet es 1500 bytes.
+
 3. ¿Qué efecto presenta la opción **-N**? ¿Qué tipo de aplicaciones pueden requerir tal utilidad?
+
+El argumento -N desactiva el algoritmo de Nagle en TCP. Lo que hace este algoritmo es acumular los datos pequeños y los envía juntos en un segmento en vez de enviarlos individualmente. Desactivar el algoritmo puede afectar el throughput en transferencias con muchos mensajes pequeños que se envían constantemente.
+
+Las aplicaciones que requieren esta opción generalmente son las aplicaciones de tiempo real, ya que se necesita que se envíen datos inmediatamente. También puede ser requerida en las aplicaciones interactivas, como en conexiones remotas, si no se usa esta opción entonces puede haber delays al presionar teclas.
 
 ### iptraf (estadísticas de uso de la red)
 
 [iptraf](http://iptraf.seul.org/1.4/manual.html#intro) es una herramienta para monitorizar redes IP. Intercepta los paquetes que cursan la red y presenta varias estadísticas acerca del tráfico actual en ella.
 
 1. Inicie la utilidad mediante el comando **iptraf-ng** (como usuario **root**).
+
+**TODO**
+
 2. Consulte las opciones “IP Traffic Monitor”, “Detailed Interface Statistics” y visite el sitio web de la UNLu y otros sitios. ¿Qué información proporciona cada opción?
+
+**TODO**
 
 ### ntop (estadísticas de uso de la red)
 
 Herramienta para el monitoreo y análisis de tráfico en la red. Provee una interfaz web para los reportes muy completa e intuitiva.
 
 1. Instale **ntop** en su distribución o mediante docker siguiendo las [instrucciones de instalación](https://www.ntop.org/support/documentation/software-installation/). El servicio levanta automaticamente, si no lo hace Iniciar ntop en su forma básica: como root o con sudo: **ntop -i <interfaz de red>**
+
+Para mi distribución tuve que utilizar **ntopng**, una vez instalado tuve que iniciar los servicios **valkey** y **ntop** con los siguientes comandos:
+
+    ```
+    sudo systemctl enable valkey
+    sudo systemctl start valkey
+    sudo systemctl enable ntopng@enp3s0
+    sudo systemctl start ntopng@enp3s0
+    ```
+
 2. Luego ingrese vía web browser a http://localhost:3000. Debería estar visualizando la interfaz de ntop.
 3. Revise las pestañas "Flows", "Hosts". Comente muy brevemente las opciones que le resulten mas útiles o interesantes. Si visualiza poca información, navegue por un par de sitios externos y vuelva a recargar la pagina de Ntop (F5).
+
+La sección **Flows** muestra los flujos de tráfico en tiempo real, el protocolo que utilizan, la duración del flujo, el throughput actual, y los bytes totales que se transfieren en cada flujo. La sección **Hosts** muestra los hosts con los que interactúa la interfaz de red, y que porcentaje del tráfico fue enviado y recibido por cada host. También muestra el throughput y la cantidad total de bytes transferido contra cada host.
+
 4. ¿Por qué cree que Ntop debe ejecutarse con permisos de root?
+
+Para poder capturar el tráfico de red a nivel de paquetes se necesita tener acceso a las interfaces en modo promiscuo, y para esto se necesita tener permisos de root. En modo promiscuo, la interfaz de red captura todos los paquetes que recibe, incluso aunque no estén destinados a él. Sin este modo, el sistema operativo filtraría éstos últimos. Además, si no requiriese permisos de root, cualquier usuario de la red podría ver el tráfico sin restricción alguna, lo cual podría ser un riesgo de seguridad.
+
 5. Tras algunos minutos de captura, obtenga los siguientes informes. Indique cómo los obtuvo y qué información relevante puede usted derivar de ellos:
     
     1. ¿Qué hosts en su red son los que más intercambian datos?
+
+        Para saber cuáles son los hosts que más intercambian datos, filtro por total de bytes transferidos de manera descendente. El primer host que aparece es 192.168.100.21, lo cual tiene sentido ya que es la IP de mi equipo, y la mayoría de los datos intercambiados fueron recibidos. En segunda posición se encuentra el host 181.30.211.14, con el que hubo un intercambio de datos de ~20 MB, siendo la mayoría de esos datos enviados por el host. En tercer lugar está el host 142.251.129.46 con unos ~4 MB intercambiados, siendo el 80% de ellos enviados por el host.
+
     2. ¿Qué protocolos de aplicación son los que más tasa de transferencia entrante o saliente cursan?
+
+        En las conexiones TCP, todas utilizan el procolo TLS, mientras que en las conexiones UDP la mayoría utiliza el protocolo QUIC.
+
+        ![](./imagenes/aplicaciones.png)
+
+        Esta gráfica se obtuvo de la sección Interface -> Details -> Applications
+
     3. ¿Qué destinos son los más contactados?
+
+        Los destinos más contactados son 192.168.100.21 (nuevamente la IP del equipo), el host 198.41.30.195, 8.8.8.8 (DNS de Google) y 1.1.1.1 (DNS de CloudFlare).
+
+        Esto se puede encontrar en la sección Hosts, filtrando por cantidad de flows de forma descentente.
+
     4. ¿Qué puertos origen y destino son los más utilizados?
+
+        El puerto de destino más utilizado es el 443, el puerto bien conocido para HTTPS. Mientras que el puerto de origen no se repite ya que, al ser mi equipo el que inicia las solicitudes, utiliza puertos efímeros, (asignados por el sistema operativo) por cada conexión que inicia.
+
     5. Si el administrador necesita revisar la actividad de la red por periodo de tiempo, ¿cuál listado de ntop ofrece una mejor visualización al respecto?
+
+        Para poder revisar la actividad de la red por período de tiempo, el listado más adecuado sería el que se encuentra en Interface -> Details -> Historical Data. En esa sección se presenta una gráfica que muestra la actividad de la red, y puede seleccionarse si se quiere ver la actividad de los últimos 10/30 minutos, de las últimas 1/2/6/12 horas, o de los últimos días/semanas/meses/año.
+
+        ![](./imagenes/actividad_red.png)
+
     6. ¿Cómo se pueden establecer alertas mediante Ntop?
+
+        En la sección Alerts -> Notifications, se pueden establecer alertas.
+
+        ![](./imagenes/alertas.jpg)
+
+        Con el botón + se pueden agregar nuevos endpoints, como email, Slack, etc.
+
     7. Si necesita ver con ntop un resumen del trafico de los protocolos de la Capa de Aplicación del stack TCP/IP, ¿a que opción debería dirigirse?
-    8. Si el administrador necesita revisar la actividad de la red por periodo de tiempo, cual listado de ntop ofrece una mejor visualización al respecto.
+
+        En la sección Interface -> Details -> Applications se puede ver un resumen del tráfico de los protocolos de la Capa de Aplicación en TCP/IP. Muestra el total de paquetes intercambiados, la cantidad total de bytes intercambiados, la cantidad de bytes enviados y recibidos, y el porcentaje relativo de datos intercambiados. También muestra una característica denominada Breed, una clasificación establecida por ntopng que determina cada aplicación por su naturaleza.
+
+        ![](./imagenes/resumen_aplicacion.png)
 
 ### Herramientas gráficas
 
