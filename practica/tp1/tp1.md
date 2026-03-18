@@ -20,15 +20,15 @@ Tanto en este práctico como en los sucesivos, es sumamente conveniente que real
 
 1. Instale y configure la herramienta [SmokePing](http://smokeping.org/). Mida durante al menos dos horas contra 3 hosts localizados en distintos continentes (puede emplear aquellos de la consigna previa). Adjunte los gráficos correspondientes a las mediciones realizadas y comente los comportamientos que puede observar a partir de ellos. Encontrará una breve [guía de configuración de la herramienta](http://www.labredes.unlu.edu.ar/sites/www.labredes.unlu.edu.ar/files/site/data/aygr/smokeping.pdf) adjunta a esta práctica.
 
-<div align="center">
+    <div align="center">
 
-![](./imagenes/Google_last_10800.png)
+    ![](./imagenes/Google_last_10800.png)
 
-![](./imagenes/UKGob_last_10800.png)
+    ![](./imagenes/UKGob_last_10800.png)
 
-![](./imagenes/AUGob_last_10800.png)
+    ![](./imagenes/AUGob_last_10800.png)
 
-</div>
+    </div>
 
 2. ¿Qué comportamiento se observa? ¿Qué implicaría un incremento/disminución de la latencia a partir de un patrón establecido? ¿Qué otras utilidades ofrece esta herramienta?
 
@@ -252,33 +252,33 @@ Tanto en este práctico como en los sucesivos, es sumamente conveniente que real
     Nmap done: 256 IP addresses (4 hosts up) scanned in 30.56 seconds
     ```
 
-El host con dirección IP 192.168.100.1 tiene los 53 (DNS) y 80 (HTTP) abiertos, mientras que los puertos 21 (FTP), 22 (SSH), y 23 (Telnet) parecen filtrados, posiblemente por un firewall. Esto tiene sentido ya que esta dirección pertenece al router por el cuál accedo a Internet. Los dos hosts siguientes son dispositivos externos, cuyos puertos parecen cerrados, y el último host es mi computadora, con el puerto 80 abierto, lo cual tiene sentido ya que para el ejercicio de Smokeping tuve que usar el servidor Apache.
+    El host con dirección IP 192.168.100.1 tiene los 53 (DNS) y 80 (HTTP) abiertos, mientras que los puertos 21 (FTP), 22 (SSH), y 23 (Telnet) parecen filtrados, posiblemente por un firewall. Esto tiene sentido ya que esta dirección pertenece al router por el cuál accedo a Internet. Los dos hosts siguientes son dispositivos externos, cuyos puertos parecen cerrados, y el último host es mi computadora, con el puerto 80 abierto, lo cual tiene sentido ya que para el ejercicio de Smokeping tuve que usar el servidor Apache.
 
 ### iperf (throughput)
 
 1. En el caso de TCP: Realice mediciones empleando diversos tamaños de ventana. Considerando valores: 1kb, 2kb, 16kb, 128kb, 320kb, 10mb. Confeccione una gráfica que represente el throughput respecto del tamaño de ventana efectivamente asignado por el programa.
 
-<div align="center">
+    <div align="center">
 
-![](./imagenes/grafico_iperf.png)
+    ![](./imagenes/grafico_iperf.png)
 
-</div>
+    </div>
 
-Los valores de throughput para 1kb, 2kb y 16kb de ventana oscilan entre 13 y 26 Mbits/sec debido a que como la prueba se realizó en la misma computadora, el sistema operativo ignora estos tamaños de ventana y los ajusta automáticamente.
+    Los valores de throughput para 1kb, 2kb y 16kb de ventana oscilan entre 13 y 26 Mbits/sec debido a que como la prueba se realizó en la misma computadora, el sistema operativo ignora estos tamaños de ventana y los ajusta automáticamente.
 
 2. ¿Qué permite establecer la opción **-M**? ¿Cómo afecta esto al throughput? Investigue la técnica “Path MTU discovery”.
 
-El argumento **-M** permite establecer el MSS (Maximum Segment Size), el tamaño máximo de datos que contiene un segmento TCP. 
+    El argumento **-M** permite establecer el MSS (Maximum Segment Size), el tamaño máximo de datos que contiene un segmento TCP. 
 
-Mientras más pequeño sea el MSS, en mayor cantidad de segmentos se van a dividir los datos, generando un mayor overhead de headers TCP/IP y reduciendo el throughput ya que se debe procesar cada segmento. Si el MSS es muy grande, superando el MTU del enlace, los paquetes se fragmentan y también afectaría el throughput.
+    Mientras más pequeño sea el MSS, en mayor cantidad de segmentos se van a dividir los datos, generando un mayor overhead de headers TCP/IP y reduciendo el throughput ya que se debe procesar cada segmento. Si el MSS es muy grande, superando el MTU del enlace, los paquetes se fragmentan y también afectaría el throughput.
 
-**Path MTU Discovery** es una técnica que permite determinar cuál es el MTU (Maximum Transmission Unit) más grande en una ruta entre dos hosts. El emisor envía paquetes con el bit "don't fragment", y si algún router tiene un MTU menor, descarta el paquete y devuelve un mensaje ICMP "fragmentation needed" junto con el MTU más grande que soporta. El emisor, luego de recibir este mensaje, reduce su MSS y vuelve a intentarlo hasta encontrar el MTU adecuado. El MTU que se utiliza generalmente en Ethernet es 1500 bytes.
+    **Path MTU Discovery** es una técnica que permite determinar cuál es el MTU (Maximum Transmission Unit) más grande en una ruta entre dos hosts. El emisor envía paquetes con el bit "don't fragment", y si algún router tiene un MTU menor, descarta el paquete y devuelve un mensaje ICMP "fragmentation needed" junto con el MTU más grande que soporta. El emisor, luego de recibir este mensaje, reduce su MSS y vuelve a intentarlo hasta encontrar el MTU adecuado. El MTU que se utiliza generalmente en Ethernet es 1500 bytes.
 
 3. ¿Qué efecto presenta la opción **-N**? ¿Qué tipo de aplicaciones pueden requerir tal utilidad?
 
-El argumento -N desactiva el algoritmo de Nagle en TCP. Lo que hace este algoritmo es acumular los datos pequeños y los envía juntos en un segmento en vez de enviarlos individualmente. Desactivar el algoritmo puede afectar el throughput en transferencias con muchos mensajes pequeños que se envían constantemente.
+    El argumento -N desactiva el algoritmo de Nagle en TCP. Lo que hace este algoritmo es acumular los datos pequeños y los envía juntos en un segmento en vez de enviarlos individualmente. Desactivar el algoritmo puede afectar el throughput en transferencias con muchos mensajes pequeños que se envían constantemente.
 
-Las aplicaciones que requieren esta opción generalmente son las aplicaciones de tiempo real, ya que se necesita que se envíen datos inmediatamente. También puede ser requerida en las aplicaciones interactivas, como en conexiones remotas, si no se usa esta opción entonces puede haber delays al presionar teclas.
+    Las aplicaciones que requieren esta opción generalmente son las aplicaciones de tiempo real, ya que se necesita que se envíen datos inmediatamente. También puede ser requerida en las aplicaciones interactivas, como en conexiones remotas, si no se usa esta opción entonces puede haber delays al presionar teclas.
 
 ### iptraf (estadísticas de uso de la red)
 
@@ -286,11 +286,23 @@ Las aplicaciones que requieren esta opción generalmente son las aplicaciones de
 
 1. Inicie la utilidad mediante el comando **iptraf-ng** (como usuario **root**).
 
-**TODO**
-
 2. Consulte las opciones “IP Traffic Monitor”, “Detailed Interface Statistics” y visite el sitio web de la UNLu y otros sitios. ¿Qué información proporciona cada opción?
 
-**TODO**
+    <div align="center">
+
+    ![](./imagenes/iptraf1.jpg)
+
+    </div>
+
+    La opción **IP Traffic Monitor** muestra las conexiones TCP que se realizan en tiempo real, la cantidad de paquetes y bytes que intercambian, la interfaz de red que se utiliza para la conexión, y los flags TCP que se utilizan en la conexión (P = PSH, A = ACK). En el apartado que se observa en la parte inferior de la imagen, se muestra el intercambio de datos mediante el protocolo UDP, con destino a 239.255.255.250:1900, la cual es una dirección multicast que se usa para descubrir dispositivos dentro de la red local.
+
+    <div align="center">
+
+    ![](./imagenes/iptraf2.jpg)
+
+    </div>
+
+    La opción **Detailed Interface Statistics** muestra estadísticas sobre las conexiones que se realizan mediante una interfaz de red. Se puede observar para cada protocolo (y en total) el total de paquetes y bytes intercambiados, y la cantidad de paquetes y bytes recibidos y enviados. También muestra la tasa de transferencia total, la tasa de transferencia para los datos recibidos y enviados, la tasa de broadcast, y la cantidad de errores de checksum en IP.
 
 ### ntop (estadísticas de uso de la red)
 
@@ -298,21 +310,21 @@ Herramienta para el monitoreo y análisis de tráfico en la red. Provee una inte
 
 1. Instale **ntop** en su distribución o mediante docker siguiendo las [instrucciones de instalación](https://www.ntop.org/support/documentation/software-installation/). El servicio levanta automaticamente, si no lo hace Iniciar ntop en su forma básica: como root o con sudo: **ntop -i <interfaz de red>**
 
-Para mi distribución tuve que utilizar **ntopng**, una vez instalado tuve que iniciar los servicios **valkey** y **ntop** con los siguientes comandos:
+    Para mi distribución tuve que utilizar **ntopng**, una vez instalado tuve que iniciar los servicios **valkey** y **ntop** con los siguientes comandos:
 
-    sudo systemctl enable valkey
-    sudo systemctl start valkey
-    sudo systemctl enable ntopng@enp3s0
-    sudo systemctl start ntopng@enp3s0
+        sudo systemctl enable valkey
+        sudo systemctl start valkey
+        sudo systemctl enable ntopng@enp3s0
+        sudo systemctl start ntopng@enp3s0
 
 2. Luego ingrese vía web browser a http://localhost:3000. Debería estar visualizando la interfaz de ntop.
 3. Revise las pestañas "Flows", "Hosts". Comente muy brevemente las opciones que le resulten mas útiles o interesantes. Si visualiza poca información, navegue por un par de sitios externos y vuelva a recargar la pagina de Ntop (F5).
 
-La sección **Flows** muestra los flujos de tráfico en tiempo real, el protocolo que utilizan, la duración del flujo, el throughput actual, y los bytes totales que se transfieren en cada flujo. La sección **Hosts** muestra los hosts con los que interactúa la interfaz de red, y que porcentaje del tráfico fue enviado y recibido por cada host. También muestra el throughput y la cantidad total de bytes transferido contra cada host.
+    La sección **Flows** muestra los flujos de tráfico en tiempo real, el protocolo que utilizan, la duración del flujo, el throughput actual, y los bytes totales que se transfieren en cada flujo. La sección **Hosts** muestra los hosts con los que interactúa la interfaz de red, y que porcentaje del tráfico fue enviado y recibido por cada host. También muestra el throughput y la cantidad total de bytes transferido contra cada host.
 
 4. ¿Por qué cree que Ntop debe ejecutarse con permisos de root?
 
-Para poder capturar el tráfico de red a nivel de paquetes se necesita tener acceso a las interfaces en modo promiscuo, y para esto se necesita tener permisos de root. En modo promiscuo, la interfaz de red captura todos los paquetes que recibe, incluso aunque no estén destinados a él. Sin este modo, el sistema operativo filtraría éstos últimos. Además, si no requiriese permisos de root, cualquier usuario de la red podría ver el tráfico sin restricción alguna, lo cual podría ser un riesgo de seguridad.
+    Para poder capturar el tráfico de red a nivel de paquetes se necesita tener acceso a las interfaces en modo promiscuo, y para esto se necesita tener permisos de root. En modo promiscuo, la interfaz de red captura todos los paquetes que recibe, incluso aunque no estén destinados a él. Sin este modo, el sistema operativo filtraría éstos últimos. Además, si no requiriese permisos de root, cualquier usuario de la red podría ver el tráfico sin restricción alguna, lo cual podría ser un riesgo de seguridad.
 
 5. Tras algunos minutos de captura, obtenga los siguientes informes. Indique cómo los obtuvo y qué información relevante puede usted derivar de ellos:
     
@@ -377,6 +389,13 @@ Para poder capturar el tráfico de red a nivel de paquetes se necesita tener acc
 ### Herramientas gráficas
 
 1. Investigue qué herramientas gráficas existen para monitorear redes y centros de datos. Seleccione una y comente sus funcionalidades.
+
+    Algunas de las herramientas que se utilizan para monitorear redes y centros de datos son Nagios, Grafana, Prometheus, y Cacti. Grafana es una de las que más se utiliza actualmente. Grafana es una plataforma open source que permite el análisis y monitoreo de métricas. Algunas de sus funciones principales son:
+
+    - Utiliza dashboards, son paneles que permiten mostrar gráficas de diferentes tipos. Se pueden usar variables para hacerlos dinámicos, y compartirlos a otros usuarios o exportarlos a JSON.
+    - Para obtener métricas, Grafana se conecta a fuentes externas, soportando más de 150 fuentes de datos, entre ellas Prometheus, MySQL, PostgreSQL, CloudWatch, Azure Monitor, Google Cloud Monitoring, entre otros.
+    - Permite definir alertas a partir de consultas a fuentes de datos. Cuando una métrica supera un umbral, Grafana puede notificar mediante email, Slack, Telegram, entre otros.
+    - Grafana Tempo es un componente que permite trazar el recorrido de una solicitud que pasa por varios microservicios, lo cual puede ser útil para diagnosticar la latencia en arquitecturas complejas.
 
 ## Guía de Lectura
 
