@@ -9,3 +9,6 @@
 ## Práctica
 
 - [TP 1. Herramientas de Diagnóstico de Redes](/practica/tp1/tp1.md)
+
+- [TP 2. Herramientas de Gestión de Redes](/practica/tp2/tp2.md)
+
