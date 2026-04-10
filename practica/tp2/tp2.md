@@ -12,7 +12,6 @@
 - GEERLING, J. 2015. Capítulo 11: [“Server Security and Ansible”. Sección “A brief history of SSH and remote access” en Ansible for DevOps: Server and configuration management for humans. LeanPub.](https://www.jeffgeerling.com/blog/brief-history-ssh-and-remote-access)
 - YLONEN, T.; LONVICK. C. 2006. [“RFC 4251: The Secure Shell (SSH) Protocol Architecture”. The Internet Society.](https://tools.ietf.org/html/rfc4253)
 
-
 ### Secure Shell (SSH)
 
 El Secure Shell Protocol, más conocido como SSH, es un esquema de arquitectura cliente/servidor que crea un canal seguro de comunicación entre dos dispositivos sobre una red insegura. Se vale de técnicas de autenticación y cifrado mediante claves tanto simétricas como asimétricas. Esta clase cubrirá los usos más habituales del protocolo, mientras que los aspectos de criptografía se tratarán en clases posteriores de la asignatura.
@@ -70,6 +69,10 @@ Sobre la infraestructura que proporciona el protocolo ssh se pueden utilizar dif
     mateon@aygr-ssh-server:~$ 
     ```
 
+    Para iniciar una sesión remota mediante SSH hacia un servidor remoto, se utiliza el comando ssh junto con el nombre de usuario con el que se desea iniciar sesión, seguido de un @ y la IP del servidor remoto.
+
+    Al ejecutar el comando, el cliente SSH intenta conectarse con el servidor por el puerto 22. El servidor presenta su clave pública, y como es la primera vez que se conecta, SSH no la reconoce y muestra el fingerprint al usuario para que la verifique. Al responder afirmativamente, el fingerprint se almacena en ***~/.ssh/known_hosts*** para verificaciones futuras. Por último, el servidor pide la contraseña del usuario, y una vez autenticado, se establece la conexión y el prompt cambia a ***user@server:~$***.
+
 3. Utilizando **netstat**, obtenga un listado de los procesos que se encuentran en escucha en el host remoto. Guarde esta información en un archivo.
 
     ```
@@ -104,7 +107,7 @@ Sobre la infraestructura que proporciona el protocolo ssh se pueden utilizar dif
      procesos_en_escucha.txt
     ```
 
-    **sshfs** es una herramienta que monda el sistema de archivos del host remoto como si fuera un directorio local mediante ssh, permitiendo copiar el archivo sin usar scp o sftp.
+    **sshfs** es una herramienta que monda el sistema de archivos del host remoto como si fuera un directorio local mediante SSH, permitiendo copiar el archivo sin usar scp o sftp.
 
 4. La cuenta de usuario que está utilizando tiene privilegios limitados. ¿De qué manera(s) es posible “elevar privilegios” a fin de disponer de mayor control sobre el host? ¿Son éstas las únicas formas posibles?
 
@@ -280,7 +283,7 @@ Sobre la infraestructura que proporciona el protocolo ssh se pueden utilizar dif
 
 7. En el host remoto se encuentra una aplicación web que solo es accesible por la interfaz loopback (**127.0.0.1**). Resulta necesario acceder a esta aplicación desde su propio equipo. ¿Qué estrategia puede utilizarse para poder acceder a dicho servicio?
 
-    Una estrategia para poder acceder al servicio web es, una vez conectado mediante ssh al host remoto, utilizar la herramienta curl de la siguiente manera:
+    Una estrategia para poder acceder al servicio web es, una vez conectado mediante SSH al host remoto, utilizar la herramienta curl de la siguiente manera:
 
     ```
     root@aygr-ssh-server:~# curl http://localhost:8000
@@ -333,6 +336,6 @@ Sobre la infraestructura que proporciona el protocolo ssh se pueden utilizar dif
 
 9. ¿Qué riesgos presenta que el usuario **root** tenga acceso a un host mediante SSH? ¿Cómo puede habilitarse o deshabilitarse esta característica?
 
-    Los riesgos que presenta que el usuario root tenga acceso a un host mediante ssh es que los bots que utilizan fuerza bruta (como los que aparecen en el auth.log) prueben iniciar sesión como root. Otro problema es que si varios usuarios usan root, no se puede distinguir con exactitud quién hizo qué bajo permisos de superusuario, esto se puede evitar si cada usuario usa su propio usuario y eleva sus privilegios con sudo, ya que queda registro de esto en los logs. El problema más grave es que un usuario root puede destruir el sistema completo.
+    Los riesgos que presenta que el usuario root tenga acceso a un host mediante SSH es que los bots que utilizan fuerza bruta (como los que aparecen en el auth.log) prueben iniciar sesión como root. Otro problema es que si varios usuarios usan root, no se puede distinguir con exactitud quién hizo qué bajo permisos de superusuario, esto se puede evitar si cada usuario usa su propio usuario y eleva sus privilegios con sudo, ya que queda registro de esto en los logs. El problema más grave es que un usuario root puede destruir el sistema completo.
 
     Para modificar esta característica, se debe utilizar la directiva PermitRootLogin junto con los argumentos no/prohibit-password/yes dentro del archivo /etc/ssh/sshd_config. prohibit-password deshabilita el acceso root sin contraseña, y requiere autenticación con clave pública. Luego de modificar el archivo, se debe recargar el servicio de ssh.

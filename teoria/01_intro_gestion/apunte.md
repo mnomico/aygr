@@ -88,6 +88,14 @@ El objetivo de la gestión de configuración (configuration management) es monit
 
 Esta información normalmente se almacena en una base de datos. Esta base de datos se actualiza a medida que se modifican los parámetros de configuración del sistema. Una ventaja de almacenar estos datos es que puede asistir en la resolución de problemas.
 
+La gestión de configuración incluye las siguientes funciones:
+
+- Configurar los recursos gestionados, sea equipamiento de red o servicios que corren en la red
+- Auditar la red y descubrir qué hay en ella
+- Sincronizar la información de gestión de la red con la información de gestión de las aplicaciones de gestión
+- Hacer backups de la configuración de la red y restaurarla en caso de fallas
+- Gestionar imagenes de software que corren en equipamiento de red
+
 ### Accounting Management
 
 El objetivo de la gestión de contabilidad (accounting management) es asegurar que los recursos de computación y de red son usados de manera justa por todos los grupos o individuos que los acceden. Mediante esta regulación, los problemas de red pueden ser minimizados ya que los recursos son divididos según las capacidades.
