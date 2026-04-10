@@ -14,6 +14,8 @@ Tanto en este práctico como en los sucesivos, es sumamente conveniente que real
     - Capítulo 2. Sección “Network Performance” (pp. 32-44)
     - Capítulo 3. Sección “Checking the Health of the Existing Internetwork” (pp. 71-81)
 
+- [Resumen de la bibliografía](./apunte.md)
+
 ## Trabajo Práctico
 
 ### ping (RTT)
