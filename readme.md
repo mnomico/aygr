@@ -4,11 +4,7 @@
 
 ## Teoría
 
-- [Introducción a la Gestión de Redes](/teoria/01_intro_gestion/apunte.md)
-
-- [Diseño de redes](/teoria/02_diseño_de_redes/apunte.md)
-
-- [Protocolo SNMP](/teoria/03_protocolo_snmp/apunte.md)
+- [Resumen Primer Parcial](/teoria/primer_parcial/resumen.md)
 
 ## Práctica
 
@@ -20,3 +16,6 @@
 
 - [TP 4. Simple Network Management Protocol (SNMP)](/practica/tp4/tp4.md)
 
+## Parciales
+
+- [Primer Parcial - Abril 2026]()
