@@ -1,7 +1,6 @@
 <div align='center'>
 <h1>Resumen Segundo Parcial - Administración y Gestión de Redes</h1>
 </div>
----
 
 ## Módulo 1: VoIP (Voz sobre IP)
 
@@ -40,20 +39,20 @@ La arquitectura se compone de tres capas principales:
 
 ```mermaid
 graph TD
-    subgraph Capa de Soporte
+    subgraph CS["Capa de Soporte"]
         DHCP[DHCP]
         TFTP[TFTP / Provisión]
         NTP[NTP / Sincronización]
         DNS[DNS / Resolución]
     end
-    subgraph Capa de Señalización
+    subgraph CSe["Capa de Señalización"]
         SIP[SIP / H.323 / SCCP] <--> SDP[SDP / Negociación]
     end
-    subgraph Capa de Transmisión de Datos
+    subgraph CT["Capa de Transmisión de Datos"]
         RTP[RTP / Audio y Video] <--> RTCP[RTCP / Control y Calidad]
     end
-    Capa de Soporte --> Capa de Señalización
-    Capa de Señalización --> Capa de Transmisión de Datos
+    CS --> CSe
+    CSe --> CT
 ```
 
 #### A) Capa de Señalización (SIP, H.323, etc.)
