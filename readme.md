@@ -6,6 +6,8 @@
 
 - [Resumen Primer Parcial](/teoria/primer_parcial/resumen.md)
 
+- [Resumen Segundo Parcial](/teoria/primer_parcial/resumen.md)
+
 ## Práctica
 
 - [TP 1. Herramientas de Diagnóstico de Redes](/practica/tp1/tp1.md)
