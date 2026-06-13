@@ -6,7 +6,7 @@
 
 - [Resumen Primer Parcial](/teoria/primer_parcial/resumen.md)
 
-- [Resumen Segundo Parcial](/teoria/primer_parcial/resumen.md)
+- [Resumen Segundo Parcial](/teoria/segundo_parcial/resumen.md)
 
 ## Práctica
 
